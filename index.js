@@ -132,11 +132,11 @@ function findRoute(graph, start, endpoint, stack, routes) {
         return findRoute(graph, start, vertice.predecessor, stack, routes)
     }
 }
-
-function rateRoute(edge) {
+//rating edge
+function rateEdge(edge) {
     return petersen.edge(edge).weight;
 }
-
+//check that it is possible to send package this way
 function canGo(graph, route, dataStream, m) {
     for(var i = 0; i < route.length-1; i+= 1) {
         if(graph.edge(route[i], route[i+1]).c / m - graph.edge(route[i], route[i+1]).a < dataStream) {
@@ -148,7 +148,7 @@ function canGo(graph, route, dataStream, m) {
 
 var packetSize = 64;
 var routess;
-routess = graphlib.alg.dijkstraAll(petersen, rateRoute);
+routess = graphlib.alg.dijkstraAll(petersen, rateEdge);
 console.log(routess);
 
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
@@ -157,14 +157,16 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         continue;
         
         // console.log(`FROM ${i} to ${j}`);
-        let ds = matrix[(i-1)*petersen.nodeCount() + j];graphlib
-        
+        let ds = matrix[(i-1)*petersen.nodeCount() + j];
+        //finding the shorthes path from A to B
         let route = findRoute(petersen, i+'', j+'', [], routess[i]);
-        
+        // checking that we can send packadge this way
         if(canGo(petersen, route, ds, packetSize)) {
+            // set a for founds route 
             for(let k = 0; k < route.length-1; k += 1) {
                 petersen.edge(route[k], route[k+1]).a += ds;
             }
+            //clearing weights
             petersen.edges().forEach((e) => {
                 petersen.edge(e).weight = 1;
             });
