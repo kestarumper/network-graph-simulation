@@ -1,6 +1,6 @@
 const Graphlib = require('@dagrejs/graphlib');
 
-let g = new Graphlib.Graph();
+let g = new Graphlib.Graph({ directed: false });
 
 for(let i = 1; i <= 20; i += 1) {
     g.setNode(`${i}`);
@@ -90,7 +90,7 @@ function graphSettings(minBand, maxBand, minIntense, maxIntense) {
 }
 
 function newPetersen(min1, max1) {
-    const graph = new Graphlib.Graph();
+    const graph = new Graphlib.Graph({ directed: false });
     
     for(var i = 1; i <= 5; i += 1) {
         graph.setEdge(`${i}`,`${(i%5+1)}`, graphSettings(min1, max1));
@@ -107,6 +107,7 @@ function newPetersen(min1, max1) {
 }
 
 const petersen = newPetersen(20000, 30000, 500, 600);
+console.log(petersen.edges());
 const matrix = intensityMatrix(petersen, 50, 100);
 console.log(`Petersen Graph Convergence: ${connectionChance(petersen)}%`);
 
@@ -117,7 +118,7 @@ function findRoute(graph, start, endpoint, stack, routes) {
         stack.push(start);
         return stack.reverse();
     } else {
-        graph.edge(vertice.predecessor, endpoint).weight++;
+        // graph.edge(vertice.predecessor, endpoint).weight += 1;
         // console.log(graph.edge(vertice.predecessor, endpoint));
         stack.push(endpoint);    
         return findRoute(graph, start, vertice.predecessor, stack, routes)
@@ -141,17 +142,26 @@ var packetSize = 64;
 var routess;
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
     routess = Graphlib.alg.dijkstra(petersen, i+'', rateRoute);
+
+    for(const element in routess) {
+        if(routess[element].distance === Infinity) {
+            console.log(`FROM ${i} to ${element}`);
+            console.log(routess);
+            // console.log(petersen.edges())
+            // console.log(petersen.isDirected())
+            throw new Error();
+        }
+    }; 
+
     for(let j = 1; j <= petersen.nodeCount(); j += 1) {
         if(i == j)
         continue;
         
         // console.log(`FROM ${i} to ${j}`);
         let ds = matrix[(i-1)*petersen.nodeCount() + j];
-
-
-        // console.log(routess);
-
-        let route = findRoute(petersen, i, j, [], routess);
+        
+        let route = findRoute(petersen, i+'', j+'', [], routess);
+        // console.log(route);
         
         if(canGo(petersen, route, ds, packetSize)) {
             for(let k = 0; k < route.length-1; k += 1) {
@@ -160,4 +170,6 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         }
     }
 }
+
+// console.log(petersen)
 
