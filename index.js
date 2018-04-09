@@ -179,4 +179,4 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
     }
 }
 
-drawGraph(petersen.nodes(), petersen.edges());
+drawGraph(petersen, petersen.nodes(), petersen.edges());

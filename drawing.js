@@ -1,9 +1,11 @@
-function drawGraph(nodes, edges) {
+function drawGraph(g,nodes, edges) {
     var arrE = [];
     for (let i = 0; i < edges.length; i++) {
       arrE.push({
         from: edges[i].v,
-        to: edges[i].w
+        to: edges[i].w,
+        font: {align: 'middle'},
+        label: `${(g.edge(edges[i]).a/g.edge(edges[i]).c).toPrecision(1)}`
       });
     }
   
@@ -11,7 +13,7 @@ function drawGraph(nodes, edges) {
     for (let i = 0; i < nodes.length; i++) {
       arrN.push({
         id: nodes[i],
-        group: "myGroup",
+  
         label: `${nodes[i]}`
       });
     }
@@ -26,9 +28,6 @@ function drawGraph(nodes, edges) {
       edges: edges
     };
     var options = {
-      groups: {
-          myGroup: {border:{background:'blue'}, borderWidth:3}
-        },
       physics: true
     };
     var network = new vis.Network(container, data, options);
