@@ -165,6 +165,9 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
             for(let k = 0; k < route.length-1; k += 1) {
                 petersen.edge(route[k], route[k+1]).a += ds;
             }
+            petersen.edges().forEach((e) => {
+                petersen.edge(e).weight = 1;
+            });
         }
     }
 }
