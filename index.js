@@ -90,26 +90,31 @@ function graphSettings(minBand, maxBand) {
 }
 
 function newPetersen(min1, max1) {
-    const graph = new graphlib.Graph({ directed: true, multigraph: true });
+    const graph = new graphlib.Graph({ directed: false, multigraph: false });
 
     for(var i = 1; i <= 10; i += 1) {
         graph.setNode(i+'');
     }
     
     for(var i = 1; i <= 5; i += 1) {
-        graph.setEdge(`${i}`, `${(i%5+1)}`, graphSettings(20000, 40000));
-        // graph.setEdge(`${(i%5+1)}`, `${i}`, graphSettings(20000, 40000));
-
-        graph.setEdge(`${i}`, `${i+5}`, graphSettings(20000, 40000));
-        // graph.setEdge(`${i+5}`, `${i}`, graphSettings(20000, 40000));
-
-        graph.setEdge(`${i+5}`, `${(i+1)%5+6}`, graphSettings(20000, 40000));
-        // graph.setEdge(`${(i+1)%5+6}`, `${i+5}`, graphSettings(20000, 40000));
+        var setting = graphSettings(20000, 40000);
+        graph.setEdge(`${i}`, `${(i%5+1)}`, setting);
+        // graph.setEdge(`${(i%5+1)}`, `${i}`, setting);
+        
+        setting = graphSettings(20000, 40000);
+        graph.setEdge(`${i}`, `${i+5}`, setting);
+        // graph.setEdge(`${i+5}`, `${i}`, setting);
+        
+        setting = graphSettings(20000, 40000);
+        graph.setEdge(`${i+5}`, `${(i+1)%5+6}`, setting);
+        // graph.setEdge(`${(i+1)%5+6}`, `${i+5}`, setting);
     }
-
+    
     // +warkocz
     for(var i = 1; i <= 4; i += 1) {
-        graph.setEdge(`${i}`,`${((i+1)%5+1)}`, graphSettings(20000, 40000));
+        setting = graphSettings(20000, 40000);
+        graph.setEdge(`${i}`,`${((i+1)%5+1)}`, setting);
+        // graph.setEdge(`${((i+1)%5+1)}`, `${i}`, setting);
     }
 
     return graph;
@@ -148,7 +153,9 @@ function canGo(graph, route, dataStream, m) {
 
 var packetSize = 64;
 var routess;
-routess = graphlib.alg.dijkstraAll(petersen, rateEdge);
+routess = graphlib.alg.dijkstraAll(petersen, rateEdge, function(v) {
+    return petersen.nodeEdges(v);
+});
 console.log(routess);
 
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
