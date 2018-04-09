@@ -1,6 +1,6 @@
-const Graphlib = require('@dagrejs/graphlib');
 
-let g = new Graphlib.Graph({ directed: false });
+
+let g = new graphlib.Graph({ directed: false });
 
 for(let i = 1; i <= 20; i += 1) {
     g.setNode(`${i}`);
@@ -11,8 +11,8 @@ for(let i = 1; i < 20; i += 1) {
 }
 
 function connectionChance(grph, tries = 100) {
-    const jsonDump = Graphlib.json.write(grph);
-    let graph = Graphlib.json.read(jsonDump);
+    const jsonDump = graphlib.json.write(grph);
+    let graph = graphlib.json.read(jsonDump);
     let successes = 0;
     
     for(var i = 0; i < tries; i += 1) {
@@ -26,12 +26,12 @@ function connectionChance(grph, tries = 100) {
         Finds all connected components in a graph and returns an array of these components. Each component is itself an array that contains the ids of nodes in the component.
         This function takes O(|V|) time.
         */
-        if(Graphlib.alg.components(graph).length > 1) {
+        if(graphlib.alg.components(graph).length > 1) {
             successes++;
         }
         
         // clone
-        graph = Graphlib.json.read(jsonDump);
+        graph = graphlib.json.read(jsonDump);
     }
 
     return (1 - successes/tries)*100;
@@ -90,7 +90,7 @@ function graphSettings(minBand, maxBand, minIntense, maxIntense) {
 }
 
 function newPetersen(min1, max1) {
-    const graph = new Graphlib.Graph({ directed: false });
+    const graph = new graphlib.Graph({ directed: false });
     
     for(var i = 1; i <= 5; i += 1) {
         graph.setEdge(`${i}`,`${(i%5+1)}`, graphSettings(min1, max1));
@@ -141,7 +141,7 @@ function canGo(graph, route, dataStream, m) {
 var packetSize = 64;
 var routess;
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
-    routess = Graphlib.alg.dijkstra(petersen, i+'', rateRoute);
+    routess = graphlib.alg.dijkstra(petersen, i+'', rateRoute);
 
     for(const element in routess) {
         if(routess[element].distance === Infinity) {
@@ -149,7 +149,7 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
             console.log(routess);
             // console.log(petersen.edges())
             // console.log(petersen.isDirected())
-            throw new Error();
+           // throw new Error();
         }
     }; 
 
@@ -158,7 +158,7 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         continue;
         
         // console.log(`FROM ${i} to ${j}`);
-        let ds = matrix[(i-1)*petersen.nodeCount() + j];
+        let ds = matrix[(i-1)*petersen.nodeCount() + j];graphlib
         
         let route = findRoute(petersen, i+'', j+'', [], routess);
         // console.log(route);
@@ -170,6 +170,8 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         }
     }
 }
+
+drawGraph(petersen.nodes(), petersen.edges());
 
 // console.log(petersen)
 
