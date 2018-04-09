@@ -10,7 +10,7 @@ for(let i = 1; i < 20; i += 1) {
     g.setEdge(`${i}`, `${i+1}`, { h: 0.95 });
 }
 
-function connectionChance(grph, tries = 1000) {
+function connectionChance(grph, tries = 100) {
     const jsonDump = Graphlib.json.write(grph);
     let graph = Graphlib.json.read(jsonDump);
     let successes = 0;
@@ -131,15 +131,16 @@ function rateRoute(edge) {
     return petersen.edge(edge).weight;
 }
 
-function canGo(graph, route, packetSize) {
+function canGo(graph, route, dataStream, m) {
     for(var i = 0; i < route.length-1; i+= 1) {
-        if(graph.edge(route[i], route[i+1]).c - graph.edge(route[i], route[i+1]).a > packetSize) {
-            return true;
+        if(graph.edge(route[i], route[i+1]).c / m - graph.edge(route[i], route[i+1]).a < dataStream) {
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
+var packetSize = 64;
 var routess;
 for(let i = 1; i <= petersen.nodes().length; i += 1) {
     for(let j = 1; j <= petersen.nodes().length; j += 1) {
@@ -151,7 +152,7 @@ for(let i = 1; i <= petersen.nodes().length; i += 1) {
         let route = findRoute(petersen, i, j, [], routess);
         // console.log(petersen);
         
-        if(canGo(petersen, route, matrix[i*petersen.nodes().length + j])) {
+        if(canGo(petersen, route, matrix[i*petersen.nodes().length + j], packetSize)) {
             for(let k = 0; k < route.length-1; k += 1) {
                 petersen.edge(route[k], route[k+1]).a += matrix[i*petersen.nodes().length + j];
             }
