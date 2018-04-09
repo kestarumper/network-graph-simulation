@@ -54,12 +54,12 @@ A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze krawędz
 g.setEdge('1', '10', { h: .8 });
 g.setEdge('5', '15', { h: .7 });
 console.log(`C+ Graph Convergence: ${connectionChance(g)}%`);
-
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze 4 krawedzie pomiedzy losowymi wierzchołkami o h=0.4.
 */
 for(var i = 0; i < 4; i += 1) {
-    g.setEdge(`${Math.floor(Math.random()*20)+1}`, `${Math.floor(Math.random()*20)+1}`, { h: .4 });
+    // g.setEdge(`${Math.floor(Math.random()*20)+1}`, `${Math.floor(Math.random()*20)+1}`, { h: .4 });
+    g.setEdge(`${i+7}`,`${i+15}`, { h: .4 });
 }
 console.log(`C++ Graph Convergence: ${connectionChance(g)}%`);
 
@@ -99,19 +99,13 @@ function newPetersen(min1, max1, min2, max2) {
     for(var i = 1; i <= 5; i += 1) {
         graph.setEdge(`${i}`,`${(i%5+1)}`, graphSettings(min1, max1, min2, max2));
         graph.setEdge(`${i}`,`${i+5}`, graphSettings(min1, max1, min2, max2));
+        graph.setEdge(`${i+5}`,`${i%5+7}`, graphSettings(min1, max1, min2, max2));
     }
 
-    // // +warkocz
-    // for(var i = 1; i <= 2; i += 1) {
-    //     //zle tworzymy edge 0 z czyms !
-    //     graph.setEdge(`${i}`,`${(i+2)%5}`, graphSettings(min1, max1, min2, max2));
-    // }
-    
-    graph.setEdge(`6`,`8`, graphSettings(min1, max1, min2, max2));
-    graph.setEdge(`6`,`9`, graphSettings(min1, max1, min2, max2));
-    graph.setEdge(`7`,`9`, graphSettings(min1, max1, min2, max2));
-    graph.setEdge(`7`,`10`, graphSettings(min1, max1, min2, max2));
-    graph.setEdge(`8`,`10`, graphSettings(min1, max1, min2, max2));
+    // +warkocz
+    for(var i = 1; i <= 4; i += 1) {
+        graph.setEdge(`${i}`,`${((i+1)%5+1)}`, graphSettings(min1, max1, min2, max2));
+    }
 
     return graph;
 }
