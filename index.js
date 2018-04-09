@@ -155,26 +155,28 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
     for(let j = 1; j <= petersen.nodeCount(); j += 1) {
         if(i == j)
         continue;
-        
-        // console.log(`FROM ${i} to ${j}`);
-        let ds = matrix[(i-1)*petersen.nodeCount() + j];
-        //finding the shorthes path from A to B
-        let route = findRoute(petersen, i+'', j+'', [], routess[i]);
-        // checking that we can send packadge this way
-        if(canGo(petersen, route, ds, packetSize)) {
-            // set a for founds route 
-            for(let k = 0; k < route.length-1; k += 1) {
-                petersen.edge(route[k], route[k+1]).a += ds;
+
+        for(var l = 0; l < 10; l += 1) {
+            let ds = matrix[(i-1)*petersen.nodeCount() + j];
+            //finding the shorthes path from A to B
+            let route = findRoute(petersen, i+'', j+'', [], routess[i]);
+            // checking that we can send packadge this way
+            if(canGo(petersen, route, ds, packetSize)) {
+                // set a for founds route 
+                for(let k = 0; k < route.length-1; k += 1) {
+                    petersen.edge(route[k], route[k+1]).a += ds;
+                }
+                //clearing weights
+                petersen.edges().forEach((e) => {
+                    petersen.edge(e).weight = 1;
+                });
+                // console.log("packet sent");
+                break;
             }
-            //clearing weights
-            petersen.edges().forEach((e) => {
-                petersen.edge(e).weight = 1;
-            });
+
         }
+        
     }
 }
 
 drawGraph(petersen.nodes(), petersen.edges());
-
-// console.log(petersen)
-
