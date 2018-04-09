@@ -160,8 +160,9 @@ console.log(routess);
 
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
     for(let j = 1; j <= petersen.nodeCount(); j += 1) {
+        // prevent sent to ourselves
         if(i == j)
-        continue;
+            continue;
 
         for(var l = 0; l < 10; l += 1) {
             let ds = matrix[(i-1)*petersen.nodeCount() + j];
@@ -180,7 +181,9 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
                 // console.log("packet sent");
                 break;
             }
-
+            // if(l === 9){
+            //     console.log("rejected");
+            // }
         }
         
     }
