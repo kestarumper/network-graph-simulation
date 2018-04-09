@@ -1,6 +1,6 @@
 
 
-let g = new graphlib.Graph({ directed: true, multigraph: true });
+let g = new graphlib.Graph();
 
 for(let i = 1; i <= 20; i += 1) {
     g.setNode(`${i}`);
@@ -10,7 +10,7 @@ for(let i = 1; i < 20; i += 1) {
     g.setEdge(`${i}`, `${i+1}`, { h: 0.95 });
 }
 
-function connectionChance(grph, tries = 100) {
+function connectionChance(grph, tries = 10000) {
     const jsonDump = graphlib.json.write(grph);
     let graph = graphlib.json.read(jsonDump);
     let successes = 0;
@@ -120,8 +120,8 @@ function newPetersen(min1, max1) {
     return graph;
 }
 
-const petersen = newPetersen(20000, 30000);
-const matrix = intensityMatrix(petersen, 50, 100);
+const petersen = newPetersen(20000, 40000);
+const matrix = intensityMatrix(petersen, 10, 50);
 console.log(`Petersen Graph Convergence: ${connectionChance(petersen)}%`);
 
 
@@ -132,7 +132,6 @@ function findRoute(graph, start, endpoint, stack, routes) {
         return stack.reverse();
     } else {
         graph.edge(vertice.predecessor, endpoint).weight += 1;
-        // console.log(graph.edge(vertice.predecessor, endpoint));
         stack.push(endpoint);    
         return findRoute(graph, start, vertice.predecessor, stack, routes)
     }
@@ -151,12 +150,11 @@ function canGo(graph, route, dataStream, m) {
     return true;
 }
 
-var packetSize = 64;
+var packetSize = 200;
 var routess;
 routess = graphlib.alg.dijkstraAll(petersen, rateEdge, function(v) {
     return petersen.nodeEdges(v);
 });
-console.log(routess);
 
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
     for(let j = 1; j <= petersen.nodeCount(); j += 1) {
@@ -178,7 +176,6 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
                 petersen.edges().forEach((e) => {
                     petersen.edge(e).weight = 1;
                 });
-                // console.log("packet sent");
                 break;
             }
             // if(l === 9){
@@ -188,5 +185,26 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         
     }
 }
+
+function SUM_e(m, graph) {
+    var result = 0;
+    graph.edges().forEach(e => {
+        var a = graph.edge(e).a
+        var c = graph.edge(e).c
+
+        result += (a / (c / m - a));
+    });
+    return result;
+}
+
+function T(matrix, sum_e) {
+    var G = matrix.reduce((prev, curr, index, arr) => {
+        return prev + curr;
+    });
+
+    return 1/G * sum_e;
+}
+
+console.log(T(matrix, SUM_e(packetSize, petersen)));
 
 drawGraph(petersen, petersen.nodes(), petersen.edges());

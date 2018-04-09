@@ -5,7 +5,7 @@ function drawGraph(g,nodes, edges) {
         from: edges[i].v,
         to: edges[i].w,
         font: {align: 'middle'},
-        label: `${(g.edge(edges[i]).a/g.edge(edges[i]).c).toPrecision(1)}`
+        label: `${(g.edge(edges[i]).a/g.edge(edges[i]).c*packetSize).toFixed(2)}`
       });
     }
   
