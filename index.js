@@ -1,6 +1,6 @@
 
 
-let g = new graphlib.Graph({ directed: false });
+let g = new graphlib.Graph({ directed: true, multigraph: true });
 
 for(let i = 1; i <= 20; i += 1) {
     g.setNode(`${i}`);
@@ -80,7 +80,7 @@ function range(min, max) {
     return Math.floor(Math.random()*(max-min))+min;
 }
 
-function graphSettings(minBand, maxBand, minIntense, maxIntense) {
+function graphSettings(minBand, maxBand) {
     return {
         h: 0.95,
         c: range(minBand, maxBand),
@@ -90,24 +90,32 @@ function graphSettings(minBand, maxBand, minIntense, maxIntense) {
 }
 
 function newPetersen(min1, max1) {
-    const graph = new graphlib.Graph({ directed: false });
+    const graph = new graphlib.Graph({ directed: true, multigraph: true });
+
+    for(var i = 1; i <= 10; i += 1) {
+        graph.setNode(i+'');
+    }
     
     for(var i = 1; i <= 5; i += 1) {
-        graph.setEdge(`${i}`,`${(i%5+1)}`, graphSettings(min1, max1));
-        graph.setEdge(`${i}`,`${i+5}`, graphSettings(min1, max1));
-        graph.setEdge(`${i+5}`,`${(i+1)%5+6}`, graphSettings(min1, max1));
+        graph.setEdge(`${i}`, `${(i%5+1)}`, graphSettings(20000, 40000));
+        // graph.setEdge(`${(i%5+1)}`, `${i}`, graphSettings(20000, 40000));
+
+        graph.setEdge(`${i}`, `${i+5}`, graphSettings(20000, 40000));
+        // graph.setEdge(`${i+5}`, `${i}`, graphSettings(20000, 40000));
+
+        graph.setEdge(`${i+5}`, `${(i+1)%5+6}`, graphSettings(20000, 40000));
+        // graph.setEdge(`${(i+1)%5+6}`, `${i+5}`, graphSettings(20000, 40000));
     }
 
     // +warkocz
     for(var i = 1; i <= 4; i += 1) {
-        graph.setEdge(`${i}`,`${((i+1)%5+1)}`, graphSettings(min1, max1));
+        graph.setEdge(`${i}`,`${((i+1)%5+1)}`, graphSettings(20000, 40000));
     }
 
     return graph;
 }
 
-const petersen = newPetersen(20000, 30000, 500, 600);
-console.log(petersen.edges());
+const petersen = newPetersen(20000, 30000);
 const matrix = intensityMatrix(petersen, 50, 100);
 console.log(`Petersen Graph Convergence: ${connectionChance(petersen)}%`);
 
@@ -118,7 +126,7 @@ function findRoute(graph, start, endpoint, stack, routes) {
         stack.push(start);
         return stack.reverse();
     } else {
-        // graph.edge(vertice.predecessor, endpoint).weight += 1;
+        graph.edge(vertice.predecessor, endpoint).weight += 1;
         // console.log(graph.edge(vertice.predecessor, endpoint));
         stack.push(endpoint);    
         return findRoute(graph, start, vertice.predecessor, stack, routes)
@@ -140,19 +148,10 @@ function canGo(graph, route, dataStream, m) {
 
 var packetSize = 64;
 var routess;
+routess = graphlib.alg.dijkstraAll(petersen, rateRoute);
+console.log(routess);
+
 for(let i = 1; i <= petersen.nodeCount(); i += 1) {
-    routess = graphlib.alg.dijkstra(petersen, i+'', rateRoute);
-
-    for(const element in routess) {
-        if(routess[element].distance === Infinity) {
-            console.log(`FROM ${i} to ${element}`);
-            console.log(routess);
-            // console.log(petersen.edges())
-            // console.log(petersen.isDirected())
-           // throw new Error();
-        }
-    }; 
-
     for(let j = 1; j <= petersen.nodeCount(); j += 1) {
         if(i == j)
         continue;
@@ -160,8 +159,7 @@ for(let i = 1; i <= petersen.nodeCount(); i += 1) {
         // console.log(`FROM ${i} to ${j}`);
         let ds = matrix[(i-1)*petersen.nodeCount() + j];graphlib
         
-        let route = findRoute(petersen, i+'', j+'', [], routess);
-        // console.log(route);
+        let route = findRoute(petersen, i+'', j+'', [], routess[i]);
         
         if(canGo(petersen, route, ds, packetSize)) {
             for(let k = 0; k < route.length-1; k += 1) {
