@@ -1,11 +1,15 @@
-function drawGraph(g,nodes, edges) {
+function drawGraph(g, nodes, edges, targetId) {
     var arrE = [];
+
+    
     for (let i = 0; i < edges.length; i++) {
+      var percentage = (g.edge(edges[i]).a/g.edge(edges[i]).c*packetSize*100).toFixed(0);
+
       arrE.push({
         from: edges[i].v,
         to: edges[i].w,
         font: {align: 'middle'},
-        label: `${(g.edge(edges[i]).a/g.edge(edges[i]).c*packetSize*100).toFixed(0)}%`
+        label: percentage !== "NaN" ? `${percentage}%` : '',
       });
     }
   
@@ -22,7 +26,7 @@ function drawGraph(g,nodes, edges) {
     var nodes = new vis.DataSet(arrN);
   
     // create a network
-    var container = document.getElementById("mynetwork");
+    var container = document.getElementById(targetId);
     var data = {
       nodes: nodes,
       edges: edges

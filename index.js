@@ -10,7 +10,7 @@ for (let i = 1; i < 20; i += 1) {
     g.setEdge(`${i}`, `${i + 1}`, { h: 0.95 });
 }
 
-function connectionChance(grph, tries = 100) {
+function connectionChance(grph, tries = 10000) {
     const jsonDump = graphlib.json.write(grph);
     let graph = graphlib.json.read(jsonDump);
     let successes = 0;
@@ -41,12 +41,14 @@ function connectionChance(grph, tries = 100) {
 Napisz program szacujący niezawodność (rozumianą jako prawdopodobieństwo nierozspójnienia) takiej sieci w dowolnym interwale.
 */
 console.log(`L Graph Convergence: ${connectionChance(g)}%`);
+drawGraph(g, g.nodes(), g.edges(), 'L');
 
 /*
 Jak zmieni się niezawodność tej sieci po dodaniu krawędzi e(1,20) takiej, że h(e(1,20))=0.95
 */
 g.setEdge('20', '1', { h: .95 });
 console.log(`C Graph Convergence: ${connectionChance(g)}%`);
+drawGraph(g, g.nodes(), g.edges(), 'C');
 
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze krawędzie e(1,10) oraz e(5,15) takie, że: h(e(1,10))=0.8, a h(e(5,15))=0.7.
@@ -54,6 +56,7 @@ A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze krawędz
 g.setEdge('1', '10', { h: .8 });
 g.setEdge('5', '15', { h: .7 });
 console.log(`C+ Graph Convergence: ${connectionChance(g)}%`);
+drawGraph(g, g.nodes(), g.edges(), 'C22');
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze 4 krawedzie pomiedzy losowymi wierzchołkami o h=0.4.
 */
@@ -62,22 +65,22 @@ for (var i = 0; i < 4; i += 1) {
     g.setEdge(`${i + 7}`, `${i + 15}`, { h: .4 });
 }
 console.log(`C++ Graph Convergence: ${connectionChance(g)}%`);
+drawGraph(g, g.nodes(), g.edges(), 'C26');
 
 // ================================================================================================================
+function range(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
 function intensityMatrix(graph, min, max) {
     const nodes = graph.nodes();
     const matrix = [];
     for (var i = 0; i < nodes.length; i += 1) {
         for (var j = 0; j < nodes.length; j += 1) {
-            matrix.push(Math.floor(Math.random() * (max - min)) + min);
+            matrix.push(range(min, max));
         }
     }
     return matrix;
-}
-
-function range(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function graphSettings(minBand, maxBand, chance) {
@@ -159,13 +162,13 @@ function simulate(graph, mtx, pSize) {
         return graph.nodeEdges(v);
     });
 
-    
+
     for (let i = 1; i <= graph.nodeCount(); i += 1) {
         for (let j = 1; j <= graph.nodeCount(); j += 1) {
             // prevent sent to ourselves
             if (i == j)
                 continue;
-    
+
             for (var l = 0; l < 10; l += 1) {
                 let ds = mtx[(i - 1) * graph.nodeCount() + j];
                 //finding the shorthes path from A to B
@@ -186,14 +189,14 @@ function simulate(graph, mtx, pSize) {
                 //     console.log("rejected");
                 // }
             }
-    
+
         }
     }
 
 }
 
 simulate(petersen, matrix, packetSize);
-drawGraph(petersen, petersen.nodes(), petersen.edges());
+drawGraph(petersen, petersen.nodes(), petersen.edges(), "Petersen");
 
 //===================================================================
 
@@ -202,7 +205,7 @@ function SUM_e(m, graph) {
     graph.edges().forEach(e => {
         var a = graph.edge(e).a
         var c = graph.edge(e).c
-        
+
         result += (a / (c / m - a));
     });
     return result;
@@ -212,7 +215,7 @@ function T(matrix, sum_e) {
     var G = matrix.reduce((prev, curr, index, arr) => {
         return prev + curr;
     });
-    
+
     return 1 / G * sum_e;
 }
 
@@ -220,12 +223,12 @@ var tMax = T(matrix, SUM_e(packetSize, petersen));
 console.log(tMax);
 
 //===================================================================
-function test(tries){
+function test(tries) {
     var graphh = newPetersen(20000, 40000, 0.7);
     var successes = 0;
     const jsonDumpp = graphlib.json.write(graphh);
     for (var i = 0; i < tries; i++) {
-    
+
         //zrobic kopie grafu
         graphh = graphlib.json.read(jsonDumpp);
         //usunac krawedzzie
@@ -234,26 +237,22 @@ function test(tries){
                 graphh.removeEdge(element);
             }
         });
-    
+
         //sprawdzic czy jest spojny
         if (graphlib.alg.components(graphh).length > 1) {
             //jesli nie to continue
             continue;
         }
-    
-        simulate(graphh,matrix,packetSize);
-        if ( tMax < T(matrix, SUM_e(packetSize, graphh))) {
-            successes +=1;
+
+        simulate(graphh, matrix, packetSize);
+        if (tMax < T(matrix, SUM_e(packetSize, graphh))) {
+            successes += 1;
         }
-    
-    
+
         //jesli tak test macierzy dla tego grafu
-        
-    
-    
     }
 
-    return successes/tries;
+    return successes / tries;
 }
 
 console.log(test(1000));
