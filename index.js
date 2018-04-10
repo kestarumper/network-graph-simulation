@@ -10,7 +10,7 @@ for (let i = 1; i < 20; i += 1) {
     g.setEdge(`${i}`, `${i + 1}`, { h: 0.95 });
 }
 
-function connectionChance(grph, tries = 1000) {
+function connectionChance(grph, tries = 10000) {
     const jsonDump = graphlib.json.write(grph);
     let graph = graphlib.json.read(jsonDump);
     let successes = 0;
@@ -81,7 +81,6 @@ showConvergence('C22', graphConvergence);
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze 4 krawedzie pomiedzy losowymi wierzchołkami o h=0.4.
 */
 for (var i = 0; i < 4; i += 1) {
-    // g.setEdge(`${Math.floor(Math.random()*20)+1}`, `${Math.floor(Math.random()*20)+1}`, { h: .4 });
     g.setEdge(`${i + 7}`, `${i + 15}`, { h: .4 });
 }
 graphConvergence = connectionChance(g);
@@ -145,8 +144,16 @@ function newPetersen(min1, max1, chance) {
     return graph;
 }
 
+function showMatrix(targetId, m) {
+    var element = document.querySelector('#'+targetId);
+    element.innerHTML = m;
+}
+
 const petersen = newPetersen(20000, 40000, 0.95);
 const matrix = intensityMatrix(petersen, 10, 50);
+
+showMatrix('intensityMatrix', matrix);
+
 graphConvergence = connectionChance(petersen);
 console.log(`Petersen Graph Convergence: ${graphConvergence}%`);
 showConvergence('Petersen', graphConvergence);
@@ -244,6 +251,7 @@ function T(matrix, sum_e) {
 }
 
 var tMax = T(matrix, SUM_e(packetSize, petersen));
+document.querySelector('#meanLatency').innerHTML = (tMax*1000).toFixed(2);
 console.log(tMax);
 
 //===================================================================
@@ -269,7 +277,7 @@ function test(tries) {
         }
 
         simulate(graphh, matrix, packetSize);
-        if (tMax < T(matrix, SUM_e(packetSize, graphh))) {
+        if (tMax <= T(matrix, SUM_e(packetSize, graphh))) {
             successes += 1;
         }
 
@@ -279,4 +287,6 @@ function test(tries) {
     return successes / tries;
 }
 
-console.log(test(100));
+var reliability = test(1000);
+document.querySelector('#reliability').innerHTML = (reliability*100).toFixed(2);
+console.log(reliability);

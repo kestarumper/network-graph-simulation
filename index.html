@@ -7,6 +7,10 @@
     <title>Document</title>
     <link rel="stylesheet" href="grid.css">
     <style>
+        * {
+            word-wrap: break-word;
+        }
+
         .graph {
             border: 1px solid black;
             width: 100%;
@@ -25,8 +29,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Modelowanie sieci</h1>
-        <h2>Lista 2</h2>
+        <div class="row">
+            <div class="col-6-6">
+                <h1>Modelowanie sieci</h1>
+                <h2>Lista 2</h2>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-4-6">
                 <h3>Line</h3>
@@ -100,7 +109,9 @@
                         e{10, 15, h: 0.95}<br>
                     </code>
                 </p>
-                <p>Prawdopodobieństwo wzrosło znikomo gdy zwiększyliśmy stopień bezawaryjności w stosunku do ilości dodanych krawędzi. Można stąd wnioskować że najlepszym czynnikiem wpływającym na spójność jest redundantność połączeń.</p>
+                <p>
+                    <b>Obserwacja</b><br>
+                    Prawdopodobieństwo wzrosło znikomo gdy zwiększyliśmy stopień bezawaryjności w stosunku do ilości dodanych krawędzi. Można stąd wnioskować że najlepszym czynnikiem wpływającym na spójność jest redundantność połączeń.</p>
                 
             </div>
         </div>
@@ -113,22 +124,59 @@
             </div>
 
             <div class="col-2-6">
-                <h3>Komentarz</h3>
-                <p>
-
-                </p>
+                    <h3>Komentarz</h3>
+                    <p>Dodajemy 4 kolejne losowe krawędzie, takie, że:<br> 
+                        <code>
+                            i = 0...4; <br>
+                            e(i + 7, i + 15, h: 0.4 )<br>
+                        </code> 
+                    </p>
+                    <p>
+                        <b>Obserwacja</b><br>
+                        Pomimo dodania 4 nowych krawędzi (co prawda z niską niezawodnością), spójność wzrosła znikomo.
+                    </p>
+                    <p>
+                        <b>Wniosek</b><br>
+                        Duży wpływ ma to jak dodamy te krawędzie, to znaczy, które wierzchołki połączymy.
+                    </p>
+                    <p>
+                        <b>Fakt</b><br>
+                        Największą spójnością będą cieszyć się grafy regularne, czyli te mające te same stopnie wszystkich wierzchołków. Oczywiście im wyższy stopień tym lepiej. Idealnymi kandydatami są grafy pełne.
+                    </p>
             </div>
         </div>
+
         
         <div class="row">
-            <div class="col-4-6">
+            <div class="col-6-6">
                 <h3>Petersen +4</h3>
                 <div class="graph" id="Petersen"></div>
                 <span class="convergence"></span>
             </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-6-6">
+                <h3>Intensity Matrix</h3>
+                <span id="intensityMatrix"></span>
+            </div>
+        </div>
 
-            <div class="col-2-6">
-
+        <div class="row">
+            <div class="col-6-6">
+                <p>
+                    Zadanie drugie skupia się na ruchu sieciowym. Na jego początku warto powiedzieć o oznaczeniach. Intensity Matrix jest to macierz, która mówi nam o ilości pakietów wysłanych z i-tego węzła do j-otego. Będziemy jej używać w czasie liczenia opóźnienia w dotarciu pakietu. Graf ma 10 węzłów, maksymalnie 19 krawędzi z parametrem c, który jest przepustowaścią w bitach i a, które mówi o ilości pakietów przechodzących przez daną krawędź. Jednak topologia naszego grafu, nie została narzucona. Z poprzedniego zadania wiem, że warto zmaksmylizować liczbę krawędzi oraz nadmiarowe połączenia. Świetnym wyborem jest graf Petersena. Jest to graf regularny stopnia 3. To daje nam 15 krawędzi przy 10 wierzchołkach, stąd dodałem jeszcze 4 krawędzie tworząc dodatkowo tzw. warkocz. W czasie eksperymentu przyjąłem również wielkość pakietu jako <b>m = 200 bitów</b>.
+                </p>
+                <p>
+                    T = 1/G * SUM_e( a(e)/(c(e)/m - a(e)) )
+                    <br>
+                    Średnie opóźnienie pakietu: <b><span id="meanLatency"></span> ms</b>
+                </p>
+                <p>
+                    Symulujemy rozspójnienie grafu (h: 0.95) 1000 razy i obliczamy średnie opóźnienie pakietu i sprawdzamy czy jest mniejsze niż tMax.
+                    Za tMax przyjmujemy średnie opóźnienie grafu nierozspójnionego.
+                    Miara niezawodności: <b><span id="reliability"></span>%</b>
+                </p>
             </div>
         </div>
 
