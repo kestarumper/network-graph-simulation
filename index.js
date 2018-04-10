@@ -40,7 +40,7 @@ function connectionChance(grph, tries = 10000) {
 function showConvergence(targetId, value) {
     var selector = `#${targetId} + .convergence`;
     var element = document.querySelector(selector);
-    element.innerHTML = `Connected: ${value}%`;
+    element.innerHTML = `Graph consistency: ${value}%`;
 }
 
 /*

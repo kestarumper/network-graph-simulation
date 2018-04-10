@@ -35,6 +35,8 @@
             <div class="col-2-6">
                 <h3>Komentarz</h3>
                 <p>Graf liniowy posiada bardzo duży współczynnik porażki gdyż wystarczy aby jedna z N krawędzi została rozerwana do rozspójnienia grafu.</p>
+                <p>Takich topologii sieciowych należy unikać :)</p>
+                <p>Kolejnym minusem jest bardzo duże opóźnienie pomiędzy dwoma końcowymi node'ami</p>
             </div>
         </div>
         
@@ -46,7 +48,10 @@
             </div>
 
             <div class="col-2-6">
-
+                <h3>Komentarz</h3>
+                <p>Dodajemy krawędź e{1, 20, h: 0.95} łączącą ostatni z pierwszym.</p>
+                <p>Graf cykliczny posiada już 2-krotnie większą niezawodność. Pokazuje nam to jak mały nakład pracy (dodanie jednej krawędzi) potrafi poprawić niezawodność sieci</p>
+                <p>Aby rozspójnić ten graf, minimum dwie krawędzie muszą zostać usunięte.</p>
             </div>
         </div>
 
@@ -58,7 +63,13 @@
             </div>
 
             <div class="col-2-6">
-
+                <h3>Komentarz</h3>
+                <p>Dodajemy dwie kolejne krawędzie 
+                    <code>
+                        e{i, j, h: 0.8}
+                        e{k, l, h: 0.7}
+                    </code>
+                </p>
             </div>
         </div>
 
