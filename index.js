@@ -10,7 +10,7 @@ for (let i = 1; i < 20; i += 1) {
     g.setEdge(`${i}`, `${i + 1}`, { h: 0.95 });
 }
 
-function connectionChance(grph, tries = 10000) {
+function connectionChance(grph, tries = 1000) {
     const jsonDump = graphlib.json.write(grph);
     let graph = graphlib.json.read(jsonDump);
     let successes = 0;
@@ -63,6 +63,13 @@ showConvergence('C', graphConvergence);
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze krawędzie e(1,10) oraz e(5,15) takie, że: h(e(1,10))=0.8, a h(e(5,15))=0.7.
 */
+g.setEdge('1', '10', { h: .95 });
+g.setEdge('5', '15', { h: .95 });
+graphConvergence = connectionChance(g);
+console.log(`C+ (0.95) Graph Convergence: ${graphConvergence}%`);
+drawGraph(g, g.nodes(), g.edges(), 'C22_95');
+showConvergence('C22_95', graphConvergence);
+
 g.setEdge('1', '10', { h: .8 });
 g.setEdge('5', '15', { h: .7 });
 graphConvergence = connectionChance(g);
@@ -272,4 +279,4 @@ function test(tries) {
     return successes / tries;
 }
 
-console.log(test(1000));
+console.log(test(100));

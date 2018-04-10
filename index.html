@@ -25,6 +25,8 @@
 </head>
 <body>
     <div class="container">
+        <h1>Modelowanie sieci</h1>
+        <h2>Lista 2</h2>
         <div class="row">
             <div class="col-4-6">
                 <h3>Line</h3>
@@ -35,8 +37,9 @@
             <div class="col-2-6">
                 <h3>Komentarz</h3>
                 <p>Graf liniowy posiada bardzo duży współczynnik porażki gdyż wystarczy aby jedna z N krawędzi została rozerwana do rozspójnienia grafu.</p>
-                <p>Takich topologii sieciowych należy unikać :)</p>
-                <p>Kolejnym minusem jest bardzo duże opóźnienie pomiędzy dwoma końcowymi node'ami</p>
+                <p><b>Wniosek</b><br>Takich topologii sieciowych należy unikać.</p>
+                <p>Kolejnym minusem jest bardzo duże opóźnienie pomiędzy dwoma końcowymi node'ami.</p>
+                <p><b>Fakt</b><br>Istnieje tylko jedna ścieżka z v do w.</p>
             </div>
         </div>
         
@@ -49,9 +52,10 @@
 
             <div class="col-2-6">
                 <h3>Komentarz</h3>
-                <p>Dodajemy krawędź e{1, 20, h: 0.95} łączącą ostatni z pierwszym.</p>
-                <p>Graf cykliczny posiada już 2-krotnie większą niezawodność. Pokazuje nam to jak mały nakład pracy (dodanie jednej krawędzi) potrafi poprawić niezawodność sieci</p>
+                <p>Dodajemy krawędź <code><br>e{1, 20, h: 0.95}<br></code> łączącą ostatni z pierwszym.</p>
+                <p><b>Obserwacja</b><br>Graf cykliczny posiada już 2-krotnie większą niezawodność. Pokazuje nam to jak mały nakład pracy (dodanie jednej krawędzi) potrafi poprawić niezawodność sieci</p>
                 <p>Aby rozspójnić ten graf, minimum dwie krawędzie muszą zostać usunięte.</p>
+                <p>Istnieją 2 ścieżki do każdego node'a.</p>
             </div>
         </div>
 
@@ -66,10 +70,38 @@
                 <h3>Komentarz</h3>
                 <p>Dodajemy dwie kolejne krawędzie 
                     <code>
-                        e{i, j, h: 0.8}
-                        e{k, l, h: 0.7}
+                        e{1, 10, h: 0.8}<br>
+                        e{10, 15, h: 0.7}<br>
+                    </code>
+                    z mniejszym współczynnikiem niezawodności 
+                </p>
+                <p>
+                    <b>Obserwacja</b><br>
+                    Prawdopodobieństwo spójności rośnie średnio o ~13%, już nie tak mocno jak w przypadku drugiego grafu (Cycle)
+                    </p>
+                <p>
+                    <b>Wniosek</b><br>
+                    Nie tylko ilość krawędzi wpływa na spójność grafu, ale również stopień awaryjności.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Cycle +2 (95%)</h3>
+                <div class="graph" id="C22_95"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+                <h3>Komentarz</h3>
+                <p>Krawędzie 
+                    <code>
+                        e{1, 10, h: 0.95}<br>
+                        e{10, 15, h: 0.95}<br>
                     </code>
                 </p>
+                <p>Prawdopodobieństwo wzrosło znikomo gdy zwiększyliśmy stopień bezawaryjności w stosunku do ilości dodanych krawędzi. Można stąd wnioskować że najlepszym czynnikiem wpływającym na spójność jest redundantność połączeń.</p>
+                
             </div>
         </div>
 
@@ -81,7 +113,10 @@
             </div>
 
             <div class="col-2-6">
+                <h3>Komentarz</h3>
+                <p>
 
+                </p>
             </div>
         </div>
         
