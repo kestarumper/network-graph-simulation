@@ -5,18 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="grid.css">
     <style>
         .graph {
             border: 1px solid black;
+            width: 100%;
+            height: 500px;
+        }
+
+        p {
+            border: 1px solid black;
+            padding: 1em;
+        }
+
+        .container {
+            max-width: none;
         }
     </style>
 </head>
 <body>
-    <div class="graph" style="width: 100%; height: 500px" id="L"></div>
-    <div class="graph" style="width: 100%; height: 500px" id="C"></div>
-    <div class="graph" style="width: 100%; height: 500px" id="C22"></div>
-    <div class="graph" style="width: 100%; height: 500px" id="C26"></div>
-    <div class="graph" style="width: 100%; height: 500px" id="Petersen"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Line</h3>
+                <div class="graph" id="L"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+                <h3>Komentarz</h3>
+                <p>Graf liniowy posiada bardzo duży współczynnik porażki gdyż wystarczy aby jedna z N krawędzi została rozerwana do rozspójnienia grafu.</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Cycle</h3>
+                <div class="graph" id="C"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Cycle +2</h3>
+                <div class="graph" id="C22"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Cycle +6</h3>
+                <div class="graph" id="C26"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4-6">
+                <h3>Petersen +4</h3>
+                <div class="graph" id="Petersen"></div>
+                <span class="convergence"></span>
+            </div>
+
+            <div class="col-2-6">
+
+            </div>
+        </div>
+
+    </div>
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"></script> -->
     <script src="graphlib.js"></script>

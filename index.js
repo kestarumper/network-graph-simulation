@@ -37,26 +37,39 @@ function connectionChance(grph, tries = 10000) {
     return (1 - successes / tries) * 100;
 }
 
+function showConvergence(targetId, value) {
+    var selector = `#${targetId} + .convergence`;
+    var element = document.querySelector(selector);
+    element.innerHTML = `Connected: ${value}%`;
+}
+
 /*
 Napisz program szacujący niezawodność (rozumianą jako prawdopodobieństwo nierozspójnienia) takiej sieci w dowolnym interwale.
 */
-console.log(`L Graph Convergence: ${connectionChance(g)}%`);
+var graphConvergence = connectionChance(g);
+console.log(`L Graph Convergence: ${graphConvergence}%`);
 drawGraph(g, g.nodes(), g.edges(), 'L');
+showConvergence('L', graphConvergence);
 
 /*
 Jak zmieni się niezawodność tej sieci po dodaniu krawędzi e(1,20) takiej, że h(e(1,20))=0.95
 */
 g.setEdge('20', '1', { h: .95 });
-console.log(`C Graph Convergence: ${connectionChance(g)}%`);
+graphConvergence = connectionChance(g);
+console.log(`C Graph Convergence: ${graphConvergence}%`);
 drawGraph(g, g.nodes(), g.edges(), 'C');
+showConvergence('C', graphConvergence);
 
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze krawędzie e(1,10) oraz e(5,15) takie, że: h(e(1,10))=0.8, a h(e(5,15))=0.7.
 */
 g.setEdge('1', '10', { h: .8 });
 g.setEdge('5', '15', { h: .7 });
-console.log(`C+ Graph Convergence: ${connectionChance(g)}%`);
+graphConvergence = connectionChance(g);
+console.log(`C+ Graph Convergence: ${graphConvergence}%`);
 drawGraph(g, g.nodes(), g.edges(), 'C22');
+showConvergence('C22', graphConvergence);
+
 /*
 A jak zmieni się niezawodność tej sieci gdy dodatkowo dodamy jeszcze 4 krawedzie pomiedzy losowymi wierzchołkami o h=0.4.
 */
@@ -64,8 +77,10 @@ for (var i = 0; i < 4; i += 1) {
     // g.setEdge(`${Math.floor(Math.random()*20)+1}`, `${Math.floor(Math.random()*20)+1}`, { h: .4 });
     g.setEdge(`${i + 7}`, `${i + 15}`, { h: .4 });
 }
-console.log(`C++ Graph Convergence: ${connectionChance(g)}%`);
+graphConvergence = connectionChance(g);
+console.log(`C++ Graph Convergence: ${graphConvergence}%`);
 drawGraph(g, g.nodes(), g.edges(), 'C26');
+showConvergence('C26', graphConvergence);
 
 // ================================================================================================================
 function range(min, max) {
@@ -125,7 +140,9 @@ function newPetersen(min1, max1, chance) {
 
 const petersen = newPetersen(20000, 40000, 0.95);
 const matrix = intensityMatrix(petersen, 10, 50);
-console.log(`Petersen Graph Convergence: ${connectionChance(petersen)}%`);
+graphConvergence = connectionChance(petersen);
+console.log(`Petersen Graph Convergence: ${graphConvergence}%`);
+showConvergence('Petersen', graphConvergence);
 
 
 function findRoute(graph, start, endpoint, stack, routes) {
